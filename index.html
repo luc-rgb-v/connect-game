@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Picture Connect - In-Room Group Play</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #101827;
+      --text: #e6eaf2;
+      --muted: #a7b1c2;
+      --accent: #50e3c2;
+      --accent2: #7aa2ff;
+      --border: rgba(255,255,255,.08);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, #141b2e, transparent), radial-gradient(900px 500px at 110% 10%, #141b2e, transparent), var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover, a:focus {
+      text-decoration: underline;
+    }
+    .wrap {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      margin-bottom: 16px;
+    }
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+    }
+    .title {
+      font-weight: 800;
+      font-size: 18px;
+    }
+    .lang {
+      display: flex;
+      gap: 8px;
+    }
+    .lang button {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .lang button:hover, .lang button:focus {
+      background: rgba(255,255,255,.12);
+    }
+    .lang button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #08101e;
+      font-weight: 700;
+    }
+    h1 {
+      font-size: 32px;
+      line-height: 1.2;
+      margin: 0 0 8px;
+    }
+    h2 {
+      font-size: 20px;
+      margin: 0 0 8px;
+    }
+    p {
+      margin: 0 0 10px;
+      font-size: 15px;
+    }
+    .pill {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      font-size: 12px;
+      border: 1px solid var(--border);
+    }
+    section {
+      margin: 20px 0;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      color: #0b1020;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      transition: transform 0.2s;
+    }
+    .btn:hover, .btn:focus {
+      transform: translateY(-2px);
+    }
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+    .g-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .g-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      transition: transform 0.2s;
+    }
+    .card:hover, .card:focus-within {
+      transform: translateY(-3px);
+    }
+    figure {
+      margin: 0;
+    }
+    .media {
+      width: 100%;
+      aspect-ratio: 16/10;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      object-fit: cover;
+      object-position: center;
+    }
+    figcaption {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+      text-align: center;
+    }
+    ul {
+      margin: 0;
+      padding-left: 16px;
+    }
+    li {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    footer p {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 16px 0;
+      text-align: center;
+    }
+    .scroll-up {
+      position: fixed;
+      bottom: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+      background: var(--panel);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .scroll-up:hover, .scroll-up:focus {
+      opacity: 1;
+    }
+    .scroll-up svg {
+      fill: var(--muted);
+      width: 24px;
+      height: 24px;
+    }
+    .gallery .media {
+      aspect-ratio: 4/3;
+    }
+    @media (max-width: 900px) {
+      .wrap {
+        padding: 12px;
+      }
+      .hero, .g-3, .g-2 {
+        grid-template-columns: 1fr;
+      }
+      h1 {
+        font-size: 26px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+      p {
+        font-size: 14px;
+      }
+      .scroll-up {
+        bottom: 12px;
+        right: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="title">Picture Connect</div>
+      </div>
+      <div class="lang" aria-label="Language switcher">
+        <button id="btn-en" class="active" type="button" aria-label="English">EN</button>
+        <button id="btn-vi" type="button" aria-label="Vietnamese">VI</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div>
+        <h1 data-i18n="hero_title">100% In-Person Story Game</h1>
+        <p data-i18n="hero_desc">Pick an image, link it to a theme, and tell your story freely. Listen, react, and enjoy real talk, no pressure.</p>
+        <a class="btn" href="#how" data-i18n="btn_how">How to Play</a>
+      </div>
+      <div class="grid g-2">
+        <figure>
+          <img class="media" src="rocket.webp" alt="Rocket" loading="lazy" decoding="async" fetchpriority="high">
+          <figcaption data-i18n="cap_example">Example Image</figcaption>
+        </figure>
+        <figure>
+          <img class="media" src="winding_road.webp" alt="Winding road" loading="lazy" decoding="async" fetchpriority="high">
+          <figcaption data-i18n="cap_example">Example Image</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="grid g-3">
+      <div class="card">
+        <h2 data-i18n="what_title">What It Is</h2>
+        <p data-i18n="what_text">A relaxed group game where images inspire short personal stories around a theme. Simple, flexible, and fun for everyone.</p>
+      </div>
+      <div class="card">
+        <h2 data-i18n="who_title">Who It’s For</h2>
+        <p data-i18n="who_text">Anyone who wants to connect, practice English, or warm up group energy—teams, students, clubs, and families.</p>
+      </div>
+      <div class="card">
+        <h2 data-i18n="why_title">Why It Works</h2>
+        <ul>
+          <li data-i18n="why_1">Builds natural connection and trust</li>
+          <li data-i18n="why_2">Improves English fluency, confidence, and vocabulary</li>
+          <li data-i18n="why_3">Encourages reflection and creative thinking</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid g-3">
+      <div class="card">
+        <h2 data-i18n="need_title">What You Need</h2>
+        <ul>
+          <li data-i18n="need_1">About 40–80 printed images (photos, drawings, icons, or symbols)</li>
+          <li data-i18n="need_2">A simple theme or question to guide conversation</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2 data-i18n="opt_title">Optional</h2>
+        <p data-i18n="opt_1">Sit in a circle or around a table, use sticky notes for new words, and prepare a bowl of random or player-suggested themes.</p>
+      </div>
+      <div class="card">
+        <h2 data-i18n="img_title">Images</h2>
+        <p data-i18n="img_text">Images are prompts only—talk about what they make you think or feel, not just what you see.</p>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2 data-i18n="how_title">How to Play (In-Room)</h2>
+      <div class="grid g-3">
+        <div class="card">
+          <strong data-i18n="step1_h">1) Pick a Theme or Question</strong>
+          <p data-i18n="step1_p">Examples: Dreams, Change, Travel, Growth, or “When did you feel brave?”.</p>
+        </div>
+        <div class="card">
+          <strong data-i18n="step2_h">2) Choose an Image</strong>
+          <p data-i18n="step2_p">Pick any image that connects to the theme or question. Take your time.</p>
+        </div>
+        <div class="card">
+          <strong data-i18n="step3_h">3) Tell Your Story</strong>
+          <p data-i18n="step3_p">Speak for about a minute: describe, reflect, or relate it to your life.</p>
+        </div>
+        <div class="card">
+          <strong data-i18n="step4_h">4) One Question or Comment</strong>
+          <p data-i18n="step4_p">Another player may ask something or share a short reaction.</p>
+        </div>
+        <div class="card">
+          <strong data-i18n="step5_h">5) Rotate Flexibly</strong>
+          <p data-i18n="step5_p">The current player chooses the next player or follows clockwise; themes may change anytime.</p>
+        </div>
+        <div class="card">
+          <strong data-i18n="rules_h">Guidelines</strong>
+          <p data-i18n="rules_p">No strict rules. Skip if you wish. Speak freely, listen kindly.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid g-2">
+      <div class="card">
+        <h2 data-i18n="ex1_title">Example: Dreams</h2>
+        <figure>
+          <img class="media" src="rocket.webp" alt="Rocket example" loading="lazy" decoding="async">
+          <figcaption data-i18n="ex1_cap">Image by Anna</figcaption>
+        </figure>
+        <p data-i18n="ex1_p"><strong>Anna</strong> picks a rocket. She dreams of designing spacecraft and the image reminds her to keep reaching higher.</p>
+      </div>
+      <div class="card">
+        <h2 data-i18n="ex2_title">Example: Change</h2>
+        <figure>
+          <img class="media" src="winding_road.webp" alt="Road example" loading="lazy" decoding="async">
+          <figcaption data-i18n="ex2_cap">Image by Minh</figcaption>
+        </figure>
+        <p data-i18n="ex2_p"><strong>Minh</strong> picks a winding road. It reminds him of moving to a new city—turns that led to growth and confidence.</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 data-i18n="gallery_title">Example Image Gallery</h2>
+      <div class="grid g-3 gallery">
+        <img class="media" src="image1.webp" alt="Gallery image 1" loading="lazy" decoding="async">
+        <img class="media" src="image2.webp" alt="Gallery image 2" loading="lazy" decoding="async">
+        <img class="media" src="image3.webp" alt="Gallery image 3" loading="lazy" decoding="async">
+        <img class="media" src="image4.webp" alt="Gallery image 4" loading="lazy" decoding="async">
+        <img class="media" src="image5.webp" alt="Gallery image 5" loading="lazy" decoding="async">
+        <img class="media" src="image6.webp" alt="Gallery image 6" loading="lazy" decoding="async">
+      </div>
+      <figcaption data-i18n="gallery_note">Printed image cards for storytelling rounds. Spread them out for everyone to pick and share!</figcaption>
+    </section>
+
+    <section>
+      <h2 data-i18n="themes_title">Quick Themes</h2>
+      <div class="grid g-3">
+        <div class="card" data-i18n="th_1">Dreams</div>
+        <div class="card" data-i18n="th_2">Change</div>
+        <div class="card" data-i18n="th_3">Travel</div>
+        <div class="card" data-i18n="th_4">Growth</div>
+        <div class="card" data-i18n="th_5">Courage</div>
+        <div class="card" data-i18n="th_6">Gratitude</div>
+      </div>
+    </section>
+
+    <footer>
+      <p data-i18n="footer_note_1">Site powered by LUC (Luke) aka TINYPEKKA</p>
+      <p data-i18n="footer_note_2">Contact: luchdt.ic@gmail.com</p>
+    </footer>
+  </div>
+  <a class="scroll-up" href="#top" title="Scroll to top" aria-label="Scroll to top">
+    <svg viewBox="0 0 24 24" width="24" height="24">
+      <path d="M12 22L3 13h6V2h6v11h6l-9 9z"/>
+    </svg>
+  </a>
+
+  <script>
+    const dict = {
+      en: {
+        hero_title: '100% In-Person Story Game',
+        hero_desc: 'Pick an image, link it to a theme, and tell your story freely. Listen, react, and enjoy real talk, no pressure.',
+        btn_how: 'How to Play',
+        cap_example: 'Example Image',
+        what_title: 'What It Is',
+        what_text: 'A relaxed group game where images inspire short personal stories around a theme. Simple, flexible, and fun for everyone.',
+        who_title: 'Who It’s For',
+        who_text: 'Anyone who wants to connect, practice English, or warm up group energy—teams, students, clubs, and families.',
+        why_title: 'Why It Works',
+        why_1: 'Builds natural connection and trust',
+        why_2: 'Improves English fluency, confidence, and vocabulary',
+        why_3: 'Encourages reflection and creative thinking',
+        need_title: 'What You Need',
+        need_1: 'About 40–80 printed images (photos, drawings, icons, or symbols)',
+        need_2: 'A simple theme or question to guide conversation',
+        opt_title: 'Optional',
+        opt_1: 'Sit in a circle or around a table, use sticky notes for new words, and prepare a bowl of random or player-suggested themes.',
+        img_title: 'Images',
+        img_text: 'Images are prompts only—talk about what they make you think or feel, not just what you see.',
+        how_title: 'How to Play (In-Room)',
+        step1_h: '1) Pick a Theme or Question',
+        step1_p: 'Examples: Dreams, Change, Travel, Growth, or “When did you feel brave?”.',
+        step2_h: '2) Choose an Image',
+        step2_p: 'Pick any image that connects to the theme or question. Take your time.',
+        step3_h: '3) Tell Your Story',
+        step3_p: 'Speak for about a minute: describe, reflect, or relate it to your life.',
+        step4_h: '4) One Question or Comment',
+        step4_p: 'Another player may ask something or share a short reaction.',
+        step5_h: '5) Rotate Flexibly',
+        step5_p: 'The current player chooses the next player or follows clockwise; themes may change anytime.',
+        rules_h: 'Guidelines',
+        rules_p: 'No strict rules. Skip if you wish. Speak freely, listen kindly.',
+        ex1_title: 'Example: Dreams',
+        ex1_cap: 'Image by Anna',
+        ex1_p: '<strong>Anna</strong> picks a rocket. She dreams of designing spacecraft and the image reminds her to keep reaching higher.',
+        ex2_title: 'Example: Change',
+        ex2_cap: 'Image by Minh',
+        ex2_p: '<strong>Minh</strong> picks a winding road. It reminds him of moving to a new city—turns that led to growth and confidence.',
+        gallery_title: 'Example Image Gallery',
+        gallery_note: 'Printed image cards for storytelling rounds. Spread them out for everyone to pick and share!',
+        themes_title: 'Quick Themes',
+        th_1: 'Dreams',
+        th_2: 'Change',
+        th_3: 'Travel',
+        th_4: 'Growth',
+        th_5: 'Courage',
+        th_6: 'Gratitude',
+        footer_note_1: 'Site powered by LUC (Luke) aka TINYPEKKA',
+        footer_note_2: 'Contact: luchdt.ic@gmail.com'
+      },
+      vi: {
+        hero_title: 'Trò kể chuyện trực tiếp 100%',
+        hero_desc: 'Chọn một hình, liên hệ với chủ đề và kể câu chuyện của bạn. Lắng nghe, phản hồi và trò chuyện thật, không áp lực.',
+        btn_how: 'Cách chơi',
+        cap_example: 'Hình ví dụ',
+        what_title: 'Trò chơi là gì',
+        what_text: 'Một trò chơi nhóm nhẹ nhàng, nơi hình ảnh khơi gợi câu chuyện cá nhân xoay quanh chủ đề. Đơn giản, linh hoạt và vui cho mọi người.',
+        who_title: 'Dành cho ai',
+        who_text: 'Bất kỳ ai muốn kết nối, luyện nói tiếng Anh hoặc khởi động không khí nhóm—đội, lớp, câu lạc bộ, hay gia đình.',
+        why_title: 'Vì sao hiệu quả',
+        why_1: 'Tạo sự kết nối và tin cậy tự nhiên',
+        why_2: 'Giúp luyện nói, tăng phản xạ và vốn từ tiếng Anh',
+        why_3: 'Khuyến khích suy ngẫm và sáng tạo cá nhân',
+        need_title: 'Cần chuẩn bị',
+        need_1: 'Khoảng 40–80 tấm hình (ảnh, biểu tượng, hình vẽ, ký hiệu...)',
+        need_2: 'Một chủ đề hoặc câu hỏi đơn giản để khơi gợi câu chuyện',
+        opt_title: 'Tùy chọn',
+        opt_1: 'Có thể ngồi vòng tròn hoặc quanh bàn, dùng giấy note ghi từ mới, và chuẩn bị một bát chủ đề ngẫu nhiên hoặc gợi ý do người chơi đề xuất.',
+        img_title: 'Hình ảnh',
+        img_text: 'Hình chỉ là gợi ý—chia sẻ điều bạn nghĩ, cảm nhận hoặc liên tưởng, không chỉ mô tả hình.',
+        how_title: 'Cách chơi (trực tiếp)',
+        step1_h: '1) Chọn chủ đề hoặc câu hỏi',
+        step1_p: 'Ví dụ: Ước mơ, Thay đổi, Du lịch, Trưởng thành, hoặc “Khi nào bạn thấy mình dũng cảm?”.',
+        step2_h: '2) Chọn hình',
+        step2_p: 'Chọn bất kỳ hình nào bạn thấy liên quan đến chủ đề hoặc câu hỏi. Cứ thoải mái.',
+        step3_h: '3) Kể câu chuyện của bạn',
+        step3_p: 'Khoảng 1 phút: mô tả, chia sẻ hoặc liên hệ đến bản thân.',
+        step4_h: '4) Hỏi hoặc chia sẻ cảm nhận',
+        step4_p: 'Người khác có thể đặt câu hỏi hoặc chia sẻ phản hồi ngắn.',
+        step5_h: '5) Đổi lượt linh hoạt',
+        step5_p: 'Người đang nói chọn người tiếp theo hoặc theo chiều kim đồng hồ; chủ đề có thể đổi bất cứ lúc nào.',
+        rules_h: 'Nguyên tắc',
+        rules_p: 'Không ép buộc, không luật cứng. Có thể bỏ lượt, thoải mái chia sẻ và lắng nghe.',
+        ex1_title: 'Ví dụ: Ước mơ',
+        ex1_cap: 'Hình Anna chọn',
+        ex1_p: '<strong>Anna</strong> chọn hình tên lửa. Cô mơ được thiết kế tàu vũ trụ, và hình ảnh nhắc cô luôn vươn cao hơn.',
+        ex2_title: 'Ví dụ: Thay đổi',
+        ex2_cap: 'Hình Minh chọn',
+        ex2_p: '<strong>Minh</strong> chọn con đường ngoằn ngoèo. Nó nhắc anh về lần chuyển đến thành phố mới—hành trình giúp anh trưởng thành hơn.',
+        gallery_title: 'Thư viện hình ví dụ',
+        gallery_note: 'Các thẻ hình in sẵn cho vòng kể chuyện. Trải ra để mọi người chọn và chia sẻ!',
+        themes_title: 'Chủ đề gợi ý',
+        th_1: 'Ước mơ',
+        th_2: 'Thay đổi',
+        th_3: 'Du lịch',
+        th_4: 'Trưởng thành',
+        th_5: 'Can đảm',
+        th_6: 'Biết ơn',
+        footer_note_1: 'Site powered by LUC (Luke) aka TINYPEKKA',
+        footer_note_2: 'INFO: luchdt.ic@gmail.com'
+      }
+    };
+
+    const els = document.querySelectorAll('[data-i18n]');
+    const btnEn = document.getElementById('btn-en');
+    const btnVi = document.getElementById('btn-vi');
+    let isSwitching = false;
+
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    function apply(lang) {
+      if (isSwitching) return;
+      isSwitching = true;
+      try {
+        els.forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          const val = dict[lang]?.[key] || dict.en[key] || '';
+          if (val.includes('<')) {
+            el.innerHTML = val;
+          } else {
+            el.textContent = val;
+          }
+        });
+        btnEn.classList.toggle('active', lang === 'en');
+        btnVi.classList.toggle('active', lang === 'vi');
+        localStorage.setItem('pc_lang', lang);
+        document.documentElement.setAttribute('lang', lang === 'vi' ? 'vi' : 'en');
+      } catch (e) {
+        console.error('Language switch error:', e);
+      } finally {
+        isSwitching = false;
+      }
+    }
+
+    const applyDebounced = debounce(apply, 200);
+    btnEn.addEventListener('click', () => applyDebounced('en'));
+    btnVi.addEventListener('click', () => applyDebounced('vi'));
+    apply(localStorage.getItem('pc_lang') || 'en');
+
+    document.querySelector('.scroll-up').addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
