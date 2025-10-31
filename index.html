@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Picture Connect - In-Room Group Play</title>
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="icon" href="ship-wheel.svg" type="image/x-icon">
   <style>
     :root {
       --bg: #0b1020;
@@ -52,7 +52,7 @@
       width: 40px;
       height: 40px;
       border-radius: 12px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      background-image: url('./ship-wheel.svg');
     }
     .title {
       font-weight: 800;
@@ -172,12 +172,7 @@
       margin: 5px 0;
       font-size: 14px;
     }
-    footer p {
-      color: var(--muted);
-      font-size: 12px;
-      margin: 16px 0;
-      text-align: center;
-    }
+   
     .scroll-up {
       position: fixed;
       bottom: 16px;
@@ -370,10 +365,6 @@
       </div>
     </section>
 
-    <footer>
-      <p data-i18n="footer_note_1">Site powered by LUC (Luke) aka TINYPEKKA</p>
-      <p data-i18n="footer_note_2">Contact: luchdt.ic@gmail.com</p>
-    </footer>
   </div>
   <a class="scroll-up" href="#top" title="Scroll to top" aria-label="Scroll to top">
     <svg viewBox="0 0 24 24" width="24" height="24">
@@ -430,9 +421,7 @@
         th_3: 'Travel',
         th_4: 'Growth',
         th_5: 'Courage',
-        th_6: 'Gratitude',
-        footer_note_1: 'Site powered by LUC (Luke) aka TINYPEKKA',
-        footer_note_2: 'Contact: luchdt.ic@gmail.com'
+        th_6: 'Gratitude'
       },
       vi: {
         hero_title: 'Trò kể chuyện trực tiếp 100%',
@@ -482,8 +471,6 @@
         th_4: 'Trưởng thành',
         th_5: 'Can đảm',
         th_6: 'Biết ơn',
-        footer_note_1: 'Site powered by LUC (Luke) aka TINYPEKKA',
-        footer_note_2: 'INFO: luchdt.ic@gmail.com'
       }
     };
 
